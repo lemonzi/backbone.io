@@ -6,9 +6,9 @@ module.exports = function(options) {
         } else if (req.method !== 'read') {
             if (req.channel) {
                 req.socket.broadcast.to(req.channel)
-                      .emit('synced', req.method);
+                      .emit(res.method, res);
             } else if (options.broadcast) {
-                req.socket.broadcast.emit('synced', req.method);
+                req.socket.broadcast.emit(res.method, res);
             }
         }
         next();
