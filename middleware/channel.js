@@ -30,9 +30,21 @@ module.exports = function(options) {
             var channel = req.channel || (req.entity+':'+req.id);
             req.socket.leave(channel);
         },
-        create: broadcast,
-        update: broadcast,
-        destroy: broadcast
+        create: function(req,res) {
+            apiHandlers.join(req,res);
+            broadcast(req,res);
+        },
+        update: function(req,res) {
+            apiHandlers.join(req,res);
+            broadcast(req,res);
+        },
+        destroy: function(req,res) {
+            apiHandlers.leave(req,res);
+            broadcast(req,res);
+        },
+        read: function(req,res) {
+            apiHandlers.join(req,res);
+        }
     };
 
     return function(req, res, next) {
