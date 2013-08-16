@@ -11,12 +11,10 @@ module.exports = function(options) {
             entity: req.entity,
             model: req.model
         };
-        if (req.channel) {
-            req.socket.broadcast.to(req.channel).emit('msg', method, message);
-        } else if (req.broadcast || options.broadcast) {
+        if (req.broadcast || options.broadcast) {
             req.socket.broadcast.emit('msg', method, message);
         } else {
-            var channel = req.entity + ':' + req.id;
+            var channel = req.channel || (req.entity + ':' + req.id);
             req.socket.broadcast.to(channel).emit('msg', method, message);
         }
     };
