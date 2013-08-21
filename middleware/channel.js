@@ -3,20 +3,19 @@ module.exports = function(options) {
     options = options || {};
 
     var broadcast = function(req, res) {
-        var method = req.method;
         var message = {
+            method: req.method,
             id: req.id,
             channel: req.channel,
             backend: req.backend,
             entity: req.entity,
-            model: req.model
         };
-        if (req.broadcast || options.broadcast) {
-            req.socket.broadcast.emit('msg', method, message);
-        } else {
+        var broad = req.socket.broadcast;
+        if (! (req.broadcast || options.broadcast)) {
             var channel = req.channel || (req.entity + ':' + req.id);
-            req.socket.broadcast.to(channel).emit('msg', method, message);
+            broad = broad.to(channel);
         }
+        broad.emit('msg', message, req.data);
     };
 
     var apiHandlers = {
